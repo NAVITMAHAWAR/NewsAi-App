@@ -187,7 +187,7 @@ const ArticleCard = ({ article, category }) => {
               className="text-black"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ repeat: Infinity, duration: 0.5, delay: 1 }}
+              transition={{ repeat: Infinity, delay: 1 }}
             >
               Generating...
             </motion.span>

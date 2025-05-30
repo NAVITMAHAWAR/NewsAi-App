@@ -12,7 +12,7 @@ import { fetchProduct } from "./redux/Slice/ProductSlice";
 import { useDispatch, useSelector } from "react-redux";
 // import Homepage from "./pages/Homepage";
 import ProtectedRoutes from "./components/ProtectedRoutes";
-import Prefrences from "./pages/Prefrences";
+import Preferences from "./pages/Prefrences";
 import LoadingSpinner from "./components/LoadingSpinner";
 import PreferenceProtectRoute from "./components/preferenceProtectRoute";
 import Footer from "./components/Footer";
@@ -33,7 +33,7 @@ const App = () => {
             <Route path="/home" element={<Homepage />} />
             <Route path="/profile" element={<Profile />} />
             <Route element={<PreferenceProtectRoute />}>
-              <Route path="/preferences" element={<Prefrences />} />
+              <Route path="/Preferences " element={<Preferences />} />
             </Route>
           </Route>
 

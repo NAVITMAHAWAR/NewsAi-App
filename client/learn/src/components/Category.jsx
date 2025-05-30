@@ -6,6 +6,8 @@ import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ArticleCard from "./ArticleCard";
+import { Skeleton } from "@mantine/core";
+import { Divide } from "lucide-react";
 
 const Category = () => {
   const [category, setCategory] = useState("general");
@@ -33,7 +35,7 @@ const Category = () => {
     }
   };
 
-  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery({
+  const { data, hasNextPage, fetchNextPage, isLoading } = useInfiniteQuery({
     queryKey: ["category", category],
     queryFn: fetchNewsByCategory,
     initialPageParam: 1,
@@ -82,16 +84,26 @@ const Category = () => {
             </p>
           }
         >
-          {data?.pages.length >= 0 &&
-            data?.pages.map((page, index) =>
-              page.news.map((article) => (
-                <ArticleCard
-                  key={article.id || index}
-                  article={article}
-                  category={category}
-                />
-              ))
-            )}
+          {isLoading ? (
+            <div className="space-y-6">
+              <Skeleton height={1000} />
+              <Skeleton height={20} />
+              <Skeleton height={30} />
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {data?.pages.length >= 0 &&
+                data?.pages.map((page, index) =>
+                  page.news.map((article) => (
+                    <ArticleCard
+                      key={article.id || index}
+                      article={article}
+                      category={category}
+                    />
+                  ))
+                )}
+            </div>
+          )}
         </InfiniteScroll>
       </div>
     </div>

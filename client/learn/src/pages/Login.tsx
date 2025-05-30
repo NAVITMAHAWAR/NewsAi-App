@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeClosed } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
-import { Button, Loader } from "@mantine/core";
+import { Button } from "@mantine/core";
+import { Loader } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import { Logine } from "../redux/Slice/authSlice";
+import { Logine, signInWithGoogle } from "../redux/Slice/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -19,13 +20,13 @@ const Login = () => {
   const { authenticated, preferences, loading } = useSelector(
     (state) => state.auth
   );
-  console.log(authenticated);
+  // console.log(authenticated);
 
   useEffect(() => {
     if (authenticated && preferences.length > 0) {
       navigate("/");
     } else if (authenticated && preferences.length <= 0) {
-      navigate("/Prefrences");
+      navigate("/Preferences");
     }
   }, [authenticated]);
 
@@ -107,10 +108,10 @@ const Login = () => {
           </Button>
           <Button
             fullWidth
-            variant="gradient"
-            gradient={{ from: "blue", to: "cyan", deg: 90 }}
+            variant="outline"
+            onClick={() => dispatch(signInWithGoogle())}
           >
-            Google Sign In
+            Login with Google
           </Button>
           <p className="text-center text-gray-800">
             Don&apos;t have an account?{" "}

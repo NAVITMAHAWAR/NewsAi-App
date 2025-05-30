@@ -3,6 +3,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "sonner";
 import { getCookie } from "../../utils/utils";
+import { auth, googleAuthProvider } from "../../config/firebase";
+import { signInWithPopup } from "firebase/auth";
 
 const initialState = {
   loading: false,
@@ -47,6 +49,25 @@ export const Logine = createAsyncThunk(
     }
   }
 );
+export const signInWithGoogle = createAsyncThunk("/google-login", async () => {
+  try {
+    const result = await signInWithPopup(auth, googleAuthProvider);
+    const idToken = await result.user.getIdToken();
+    console.log(idToken);
+
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/auth/google`,
+      { idToken }
+    );
+    const verifyres = await axios.get(
+      `${import.meta.env.VITE_API_URL}/auth/verify`,
+      { withCredentials: true }
+    );
+    return { ...res.data, ...verifyres.data };
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 const authSlice = createSlice({
   name: "auth",
@@ -107,6 +128,29 @@ const authSlice = createSlice({
 
         toast.error(action.payload.response.data.message);
         state.loading = false;
+      })
+      .addCase(signInWithGoogle.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(signInWithGoogle.fulfilled, (state, action) => {
+        state.loading = false;
+        state.authenticated = action.payload.authenticated;
+        state.name = action.payload.name;
+        state.id = action.payload.id;
+
+        setCookie("isAuthenticated", action.payload.authenticated);
+        setCookie("email", action.payload.email);
+        setCookie("name", action.payload.name);
+        setCookie("id", action.payload.id);
+        state.preferences = action.payload.preferences;
+
+        localStorage.setItem(
+          "preferences",
+          JSON.stringify(action.payload.preferences)
+        );
+
+        console.log(action.payload);
+        toast.success(action.payload.message);
       });
   },
 });

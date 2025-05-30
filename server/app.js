@@ -12,6 +12,8 @@ import aiRoutes from "./router/aiRoutes.js";
 import axios from "axios";
 import News from "./modles/News.js";
 import cron from "node-cron";
+import admin from "firebase-admin";
+import serviceAccount from "./key/test-32543-firebase-adminsdk-fbsvc-beb9adddf1.json" with { type: "json" };
 
 const app = express();
 
@@ -36,6 +38,10 @@ app.use(express.json());
 dotenv.config();
 
 dbConnect();
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 const countries = ["us", "uk", "fr", "in", "it"];
 const categories = [

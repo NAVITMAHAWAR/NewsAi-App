@@ -57,7 +57,8 @@ export const signInWithGoogle = createAsyncThunk("/google-login", async () => {
 
     const res = await axios.post(
       `${import.meta.env.VITE_API_URL}/auth/google`,
-      { idToken }
+      { idToken },
+      { withCredentials: true }
     );
     const verifyres = await axios.get(
       `${import.meta.env.VITE_API_URL}/auth/verify`,
@@ -66,6 +67,7 @@ export const signInWithGoogle = createAsyncThunk("/google-login", async () => {
     return { ...res.data, ...verifyres.data };
   } catch (error) {
     console.error(error);
+    throw error;
   }
 });
 
@@ -130,10 +132,10 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(signInWithGoogle.pending, (state) => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(signInWithGoogle.fulfilled, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
         state.authenticated = action.payload.authenticated;
         state.name = action.payload.name;
         state.id = action.payload.id;

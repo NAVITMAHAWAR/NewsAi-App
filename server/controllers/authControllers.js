@@ -94,14 +94,21 @@ export const Register = async (req, res) => {
 export const googleLogin = async (req, res) => {
   try {
     const { idToken } = req.body;
-    console.log(idToken);
+    // console.log(idToken);
+    if (!idToken) {
+      return res.status(400).json({
+        message: "idToken is required",
+      });
+    }
+
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     console.log(decodedToken);
+
     let User = await user.findOne({ email: decodedToken.email });
 
     if (!User) {
       User = new user({
-        name: decodedToken.name,
+        name: decodedToken.name || "Google User",
         email: decodedToken.email,
         password: "google-auth",
       });
@@ -117,10 +124,15 @@ export const googleLogin = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
     });
     res.status(200).json({
-      preferences: User.preferences,
+      authenticated: true,
+      id: User._id,
+      email: User.email,
+      name: User.name,
+      preferences: User.preferences || {},
       message: "login SuccessFull",
     });
   } catch (error) {

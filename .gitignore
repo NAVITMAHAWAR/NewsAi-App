@@ -2,3 +2,6 @@ client/learn/node_modules
 server/node_modules
 
 .env
+
+
+server/keyserver/key/*.json

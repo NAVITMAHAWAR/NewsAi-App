@@ -6,6 +6,7 @@ import { Button } from "@mantine/core";
 import { X, Menu } from "lucide-react";
 import { useSelector } from "react-redux";
 import ProfileDropDown from "./ProfileDropDown";
+import LiveSearch from "./LiveSearch";
 const Navbar = () => {
   const { authenticated } = useSelector((state) => state.auth);
   // console.log(import.meta.env.VITE_API_URL);
@@ -24,6 +25,10 @@ const Navbar = () => {
         >
           NewsAI
         </motion.h1>
+
+        <div className="w-1/3">
+          <LiveSearch />
+        </div>
 
         <ul className="hidden md:flex gap-4">
           {["Home", "Categories", "Channels", "About"].map((item) => (

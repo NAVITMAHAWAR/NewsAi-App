@@ -30,8 +30,8 @@ const Navbar = () => {
           <LiveSearch />
         </div>
 
-        <ul className="hidden md:flex gap-4">
-          {["Home", "Categories", "Channels", "About"].map((item) => (
+        <ul className="hidden font-bold md:flex gap-4">
+          {["Home", "News", "World", "About"].map((item) => (
             <motion.li
               //   initial={{ opacity: 0, y: -10 }}
               //   animate={{ opacity: 1, y: 0 }}

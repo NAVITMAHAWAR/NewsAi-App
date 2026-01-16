@@ -1,12 +1,20 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Avatar, Button, Container, Text } from "@mantine/core";
 import { Tabs } from "@mantine/core";
-import { BookMarked, Heart, Cog, Bot } from "lucide-react";
+import { BookMarked, Heart, Cog, Bot, BookOpenText } from "lucide-react";
 import { getCookie } from "../utils/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { getReadingHistory } from "../redux/Slice/newsSlice";
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  const { readingHistory } = useSelector((state) => state.news);
+
+  useEffect(() => {
+    dispatch(getReadingHistory());
+  }, []);
   return (
     <Container className="max-w-2x1 mx-auto mb-10">
       <div className="flex mt-8 mb-4 ">
@@ -24,7 +32,8 @@ const Profile = () => {
         </div>
 
         <div className=" bg-green-500 text-white rounded-2xl w-45 flex justify-center">
-          📖 Reading History: 12
+          📖 Reading History:
+          {readingHistory.length > 0 ? readingHistory.length : 0}
         </div>
       </div>
 
@@ -43,7 +52,7 @@ const Profile = () => {
           </Tabs.Tab>
           <Tabs.Tab
             leftSection={<Heart size={16} color="red" />}
-            value="messages"
+            value="Liked News"
           >
             Liked News
           </Tabs.Tab>
@@ -59,13 +68,33 @@ const Profile = () => {
           >
             AI Recommandations
           </Tabs.Tab>
+          <Tabs.Tab
+            leftSection={<BookOpenText size={16} color="blue" />}
+            value="reading-history"
+          >
+            Reading History
+          </Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="gallery">Gallery tab content</Tabs.Panel>
+        <Tabs.Panel value="reading-history">
+          {readingHistory.length > 0
+            ? readingHistory.map((rh) => (
+                <div key={rh._id}>
+                  <p>{rh._id}</p>
+                  <p>{rh.title}</p>
+                  <div>{rh.content}</div>
+                </div>
+              ))
+            : null}
+        </Tabs.Panel>
 
-        <Tabs.Panel value="messages">Messages tab content</Tabs.Panel>
+        <Tabs.Panel value="preferences">Prefrences</Tabs.Panel>
 
-        <Tabs.Panel value="settings">Settings tab content</Tabs.Panel>
+        <Tabs.Panel value="Bookmark">Add Bookmark</Tabs.Panel>
+
+        <Tabs.Panel value="ai-recommandations">Ai Recommandations</Tabs.Panel>
+
+        <Tabs.Panel value="Liked News">Liked News</Tabs.Panel>
       </Tabs>
     </Container>
   );

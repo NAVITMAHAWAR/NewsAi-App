@@ -18,6 +18,8 @@ import PreferenceProtectRoute from "./components/preferenceProtectRoute";
 import Footer from "./components/Footer";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AboutPage from "./components/AboutPage";
+import NewsPage from "./pages/NewsPage";
+
 const Homepage = lazy(() => import("./pages/Homepage"));
 const Profile = lazy(() => import("./pages/Profile"));
 
@@ -40,7 +42,8 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/ResetPassword" element={<ResetPasswordPage />} />
-          <Route path="About" element={<AboutPage />} />
+          <Route path="/About" element={<AboutPage />} />
+          <Route path="/news" element={<NewsPage />} />
         </Routes>
       </Suspense>
       <Footer />

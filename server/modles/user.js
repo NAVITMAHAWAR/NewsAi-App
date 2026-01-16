@@ -9,6 +9,16 @@ const UserSchema = new mongoose.Schema({
   readingHistory: [{ Object }],
 });
 
+const ReadingHistory = new mongoose.Schema({
+  articleId: String,
+  title: String,
+  source: String,
+  url: String,
+  imageUrl: String,
+  publishedAt: Date,
+  readAt: { type: Date, default: Date.now },
+});
+
 const user = mongoose.model("user", UserSchema);
 
 export default user;

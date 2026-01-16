@@ -39,6 +39,8 @@ dotenv.config();
 
 dbConnect();
 
+
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -91,7 +93,7 @@ const fetchNewsAndStore = async () => {
     }
   }
 };
-// fetchNewsAndStore();
+fetchNewsAndStore();
 
 cron.schedule("*/15 * * * *", fetchNewsAndStore);
 

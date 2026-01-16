@@ -13,3 +13,9 @@ node_modules/
 .env
 build/
 dist/
+
+
+# Firebase / secrets
+*.json
+server/key/
+.env

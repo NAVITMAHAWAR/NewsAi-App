@@ -13,7 +13,7 @@ import axios from "axios";
 import News from "./modles/News.js";
 import cron from "node-cron";
 import admin from "firebase-admin";
-import serviceAccount from "./key/test-32543-firebase-adminsdk-fbsvc-beb9adddf1.json" with { type: "json" };
+import serviceAccount from "./key/firebase.json" assert { type: "json" };
 
 const app = express();
 
@@ -39,11 +39,15 @@ dotenv.config();
 
 dbConnect();
 
-
+// const serviceAccount = JSON.parse(
+//   process.env.FIREBASE_SERVICE_ACCOUNT
+// );
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
+
+// console.log(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 const countries = ["us", "uk", "fr", "in", "it"];
 const categories = [

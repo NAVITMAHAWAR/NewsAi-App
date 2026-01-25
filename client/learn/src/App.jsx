@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import Preferences from "./pages/Prefrences";
 import LoadingSpinner from "./components/LoadingSpinner";
-import PreferenceProtectRoute from "./components/preferenceProtectRoute";
+import PreferenceProtectRoute from "./components/PreferenceProtectRoute";
 import Footer from "./components/Footer";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AboutPage from "./components/AboutPage";

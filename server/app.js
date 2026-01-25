@@ -13,7 +13,8 @@ import axios from "axios";
 import News from "./modles/News.js";
 import cron from "node-cron";
 import admin from "firebase-admin";
-import serviceAccount from "./key/firebase.json" assert { type: "json" };
+
+dotenv.config();
 
 const app = express();
 
@@ -22,26 +23,40 @@ app.use(
     secret: "hello_this_string",
     resave: false,
     saveUninitialized: true,
-  })
+  }),
 );
 
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
-  })
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+  }),
 );
 
 app.use(cookieParser());
 
 app.use(express.json());
-dotenv.config();
 
 dbConnect();
 
-// const serviceAccount = JSON.parse(
-//   process.env.FIREBASE_SERVICE_ACCOUNT
-// );
+// Load Firebase credentials from environment variable
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+} else {
+  // Fallback for local development
+  try {
+    const { default: firebaseConfig } = await import("./key/firebase.json", {
+      assert: { type: "json" },
+    });
+    serviceAccount = firebaseConfig;
+  } catch (error) {
+    console.error(
+      "Firebase credentials not found. Set FIREBASE_SERVICE_ACCOUNT environment variable.",
+    );
+    process.exit(1);
+  }
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -63,7 +78,7 @@ const fetchNewsAndStore = async () => {
   for (let country of countries) {
     for (let category of categories) {
       const { data } = await axios.get(
-        `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${process.env.NEWS_API_KEY}`
+        `https://newsapi.org/v2/top-headlines?category=${category}&country=${country}&apiKey=${process.env.NEWS_API_KEY}`,
       );
       if (data.articles && data.articles.length > 0) {
         // console.log(data.articles);

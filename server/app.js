@@ -29,7 +29,7 @@ app.use(
 app.use(
   cors({
     credentials: true,
-    origin: "http://news-ai-app-mu.vercel.app",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
   }),
 );
 
@@ -47,20 +47,11 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   try {
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
     // Fix escaped newlines in private key
-    if (
-      serviceAccount.private_key &&
-      typeof serviceAccount.private_key === "string"
-    ) {
-      serviceAccount.private_key = serviceAccount.private_key.replace(
-        /\\n/g,
-        "\n",
-      );
+    if (serviceAccount.private_key && typeof serviceAccount.private_key === 'string') {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
     }
   } catch (error) {
-    console.error(
-      "Failed to parse FIREBASE_SERVICE_ACCOUNT from env:",
-      error.message,
-    );
+    console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT from env:", error.message);
   }
 } else {
   // Fallback for local development
@@ -70,14 +61,8 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     });
     serviceAccount = firebaseConfig;
     // Fix escaped newlines in private key from JSON file
-    if (
-      serviceAccount.private_key &&
-      typeof serviceAccount.private_key === "string"
-    ) {
-      serviceAccount.private_key = serviceAccount.private_key.replace(
-        /\\n/g,
-        "\n",
-      );
+    if (serviceAccount.private_key && typeof serviceAccount.private_key === 'string') {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
     }
   } catch (error) {
     console.warn(
@@ -98,9 +83,7 @@ if (serviceAccount) {
     console.warn("Firebase features will not be available");
   }
 } else {
-  console.warn(
-    "No Firebase credentials found. Firebase features will not be available",
-  );
+  console.warn("No Firebase credentials found. Firebase features will not be available");
 }
 
 // console.log(process.env.FIREBASE_SERVICE_ACCOUNT);

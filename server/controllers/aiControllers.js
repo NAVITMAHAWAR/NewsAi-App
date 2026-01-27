@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import NewsSummary from "../modles/newsSummary.js";
+import NewsSummary from "../modles/NewsSummary.js";
 import dotenv from "dotenv";
 const genAI = new GoogleGenerativeAI("AIzaSyBWfEgVUQMp69US_EQ5loXd7Hjp4FBSQDQ");
 

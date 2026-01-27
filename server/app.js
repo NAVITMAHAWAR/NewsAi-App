@@ -29,7 +29,7 @@ app.use(
 app.use(
   cors({
     credentials: true,
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: "http://news-ai-app-mu.vercel.app",
   }),
 );
 
@@ -41,8 +41,27 @@ dbConnect();
 
 // Load Firebase credentials from environment variable
 let serviceAccount;
+let firebaseInitialized = false;
+
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  try {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    // Fix escaped newlines in private key
+    if (
+      serviceAccount.private_key &&
+      typeof serviceAccount.private_key === "string"
+    ) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(
+        /\\n/g,
+        "\n",
+      );
+    }
+  } catch (error) {
+    console.error(
+      "Failed to parse FIREBASE_SERVICE_ACCOUNT from env:",
+      error.message,
+    );
+  }
 } else {
   // Fallback for local development
   try {
@@ -50,17 +69,39 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
       assert: { type: "json" },
     });
     serviceAccount = firebaseConfig;
+    // Fix escaped newlines in private key from JSON file
+    if (
+      serviceAccount.private_key &&
+      typeof serviceAccount.private_key === "string"
+    ) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(
+        /\\n/g,
+        "\n",
+      );
+    }
   } catch (error) {
-    console.error(
+    console.warn(
       "Firebase credentials not found. Set FIREBASE_SERVICE_ACCOUNT environment variable.",
     );
-    process.exit(1);
   }
 }
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+if (serviceAccount) {
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+    firebaseInitialized = true;
+    console.log("Firebase initialized successfully");
+  } catch (error) {
+    console.error("Failed to initialize Firebase:", error.message);
+    console.warn("Firebase features will not be available");
+  }
+} else {
+  console.warn(
+    "No Firebase credentials found. Firebase features will not be available",
+  );
+}
 
 // console.log(process.env.FIREBASE_SERVICE_ACCOUNT);
 

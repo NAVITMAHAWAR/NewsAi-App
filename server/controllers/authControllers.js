@@ -22,11 +22,13 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       { id: User._id, name: User.name, email: User.email },
       process.env.JWT_SECRET || "hello_this_string",
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
     console.log(User);
     res.cookie("token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
     });
     res.status(200).json({
@@ -119,12 +121,13 @@ export const googleLogin = async (req, res) => {
     const token = jwt.sign(
       { id: User._id, name: User.name, email: User.email },
       process.env.JWT_SECRET || "hello_this_string",
-      { expiresIn: "15d" }
+      { expiresIn: "15d" },
     );
 
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
     });
     res.status(200).json({
